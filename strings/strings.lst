@@ -1,0 +1,27 @@
+     1                                  section .data
+     2                                  
+     3 00000000 436172736F6E20486F-     	MyName db "Carson Howard",10
+     3 00000009 776172640A         
+     4                                  	MyNameLength equ $-MyName
+     5                                  	Exit equ 60
+     6                                  	ExitCode equ 0
+     7                                  	SysWrite equ 1
+     8                                  	StdOut equ 1
+     9                                  
+    10                                  section .bss
+    11                                  
+    12                                  section .text
+    13                                  
+    14                                  global _start
+    15                                  
+    16                                  _start:
+    17 00000000 B801000000              	mov rax, SysWrite		; calling sys_write
+    18 00000005 BF01000000              	mov rdi, StdOut			; calling the stdout fd
+    19 0000000A 48BE-                   	mov rsi, MyName			; printing MyName
+    19 0000000C [0000000000000000] 
+    20 00000014 BA0E000000              	mov rdx, MyNameLength		; The string is length of MyName
+    21 00000019 0F05                    	syscall
+    22                                  
+    23 0000001B B83C000000              	mov rax, Exit			; set the next syscall to exit
+    24 00000020 BF00000000              	mov rdi, ExitCode		; set the error code to 0
+    25 00000025 0F05                    	syscall				; exit the program

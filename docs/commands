@@ -1,0 +1,36 @@
+#n	 ASSEMBLY COMMANDS AND MEANING
+
+# ARITHMETIC
+MOV 	- Move a value from the src to dest
+MOVSX 	- Move a value and its sign from src to dest. Src must be smaller than dest.
+NEG	- Make the value in the destination negative
+ADD	- Add src to dest, overwrites dest
+SEB	- Subtract src from dest, overwrites dest
+INC	- Increment dest by one
+DEC	- Decrement dest by one
+CMP	- Compares source and dest and sets the zero flag to 0 if same and 1 if not
+TEST	- Compares bits (a sinlge bit in a value) and sets the zero flag with it's result
+MUL	- Multiplies the operator by the value in EAX. Product stored in EDX - EAX
+IMUL	- See MUL but signed
+DIV	- Divide the dividend in EDX - EAX by the divisor. Result in EAX
+IDIV	- See DIV but signed
+LEA	- Load effective address lets you calculate the affective address of something and store it in a register
+
+# CONTROL FLOW
+JMP	- Jumps to specified label
+JNZ	- Jump not zero jumps when the zero flag is not set
+JB	- Jump below, if a conditional has dest < src, jump
+JA	- Jump above, if a conditional has dest > src, jump
+JE	- Jump equal, if the ZF = 0, opposite of JNZ
+
+# FLAG INSTRUCTIONS
+CLC	- Clear carry flag, set CF = 0
+STC	- Set carry flag, set CF = 1
+
+# BINARY
+SHL	- Shift Left
+SHR	- Shift Right
+ROL	- Rotate Left
+ROR	- Rotate Right
+RCL	- Rotate left with carry flag
+RCR	- Rotate right with carry flag

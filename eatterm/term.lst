@@ -1,0 +1,142 @@
+     1                                  ; Exe name: eatterm
+     2                                  ; Version: 1.0
+     3                                  ; Author: The guy from the assembly book
+     4                                  ; Description: A simple program for Linux that demonstarted escape sequences to do a simple "fill-screen" text output.
+     5                                  
+     6                                  section .data
+     7                                  	SCNWTH: equ 80
+     8 00000000 1B5B30313B5B303148      	PosTerm: db 27,"[01;[01H"
+     9                                  	POSLEN: equ $-PosTerm
+    10 00000009 1B5B324A                	ClearTerm: db 27,"[2J"
+    11                                  	CLEARLEN: equ $-ClearTerm
+    12 0000000D 456174206174204A6F-     	AdMsg: db "Eat at Joe's!"
+    12 00000016 65277321           
+    13                                  	ADLEN: equ $-AdMsg
+    14 0000001A 507265737320456E74-     	Prompt: db "Press Enter: "
+    14 00000023 65723A20           
+    15                                  	PROMPTLEN: equ $-Prompt
+    16                                  
+    17 00000027 303030313032303330-     	Digits: db "000102030405060708091011121314151617181920"
+    17 00000030 343035303630373038-
+    17 00000039 303931303131313231-
+    17 00000042 333134313531363137-
+    17 0000004B 313831393230       
+    18 00000051 323132333234323532-     		db "212324252627282930313233343536373839404142"
+    18 0000005A 363237323832393330-
+    18 00000063 333133323333333433-
+    18 0000006C 353336333733383339-
+    18 00000075 343034313432       
+    19 0000007B 343334343435343634-     		db "434445464748495051525354555657585960616263"
+    19 00000084 373438343935303531-
+    19 0000008D 353235333534353535-
+    19 00000096 363537353835393630-
+    19 0000009F 363136323633       
+    20 000000A5 363436353636363736-     		db "6465666768697071727374757677787980"
+    20 000000AE 383639373037313732-
+    20 000000B7 373337343735373637-
+    20 000000C0 37373837393830     
+    21                                  
+    22                                  section .bss
+    23                                  
+    24                                  section .text
+    25                                  
+    26                                  ClrScreen:
+    27 00000000 50                      	push rax
+    28 00000001 53                      	push rbx
+    29 00000002 51                      	push rcx
+    30 00000003 52                      	push rdx
+    31 00000004 48B9-                   	mov rcx, ClearTerm
+    31 00000006 [0900000000000000] 
+    32 0000000E BA04000000              	mov rdx, CLEARLEN
+    33 00000013 E86A000000              	call WriteString
+    34 00000018 5A                      	pop rdx
+    35 00000019 59                      	pop rcx
+    36 0000001A 5B                      	pop rbx
+    37 0000001B 58                      	pop rax
+    38 0000001C C3                      	ret
+    39                                  
+    40                                  GotoXY:
+    41 0000001D 50                      	push rax
+    42 0000001E 53                      	push rbx
+    43 0000001F 51                      	push rcx
+    44 00000020 52                      	push rdx
+    45 00000021 54                      	push rsp
+    46 00000022 55                      	push rbp
+    47 00000023 56                      	push rsi
+    48 00000024 57                      	push rdi
+    49 00000025 4831DB                  	xor rbx, rbx
+    50 00000028 4831C9                  	xor rcx, rcx
+    51 0000002B 88C3                    	mov bl, al
+    52 0000002D 668B8B[29000000]        	mov cx, word [Digits+rbx+2]
+    53 00000034 66890C25[02000000]      	mov word [PosTerm+2], cx
+    54 0000003C 88E3                    	mov bl, ah
+    55 0000003E 668B8B[29000000]        	mov cx, [Digits+rbx+2]
+    56 00000045 66890C25[05000000]      	mov word [PosTerm+5], cx
+    57 0000004D 48B9-                   	mov rcx, PosTerm
+    57 0000004F [0000000000000000] 
+    58 00000057 BA09000000              	mov rdx, POSLEN
+    59 0000005C E821000000              	call WriteString
+    60 00000061 5F                      	pop rdi
+    61 00000062 5E                      	pop rsi
+    62 00000063 5D                      	pop rbp
+    63 00000064 5C                      	pop rsp
+    64 00000065 5A                      	pop rdx
+    65 00000066 59                      	pop rcx
+    66 00000067 5B                      	pop rbx
+    67 00000068 58                      	pop rax
+    68 00000069 C3                      	ret
+    69                                  
+    70                                  WriteChr:
+    71 0000006A 53                      	push rbx
+    72 0000006B 4831DB                  	xor rbx, rbx
+    73 0000006E B350                    	mov bl, SCNWTH
+    74 00000070 28D3                    	sub bl, dl
+    75 00000072 D0EB                    	shr bl, 1
+    76 00000074 88DC                    	mov ah, bl
+    77 00000076 E8A2FFFFFF              	call GotoXY
+    78 0000007B E802000000              	call WriteString
+    79 00000080 5B                      	pop rbx
+    80 00000081 C3                      	ret
+    81                                  
+    82                                  WriteString:
+    83 00000082 50                      	push rax
+    84 00000083 56                      	push rsi
+    85 00000084 57                      	push rdi
+    86 00000085 B801000000              	mov rax, 1
+    87 0000008A BF01000000              	mov rdi, 1
+    88 0000008F 4889CE                  	mov rsi, rcx
+    89 00000092 0F05                    	syscall
+    90 00000094 5F                      	pop rdi
+    91 00000095 5E                      	pop rsi
+    92 00000096 58                      	pop rax
+    93 00000097 C3                      	ret
+    94                                  
+    95                                  global _start
+    96                                  
+    97                                  _start:
+    98 00000098 90                      	nop
+    99                                  
+   100 00000099 E862FFFFFF              	call ClrScreen
+   101                                  
+   102 0000009E B00C                    	mov al, 12
+   103 000000A0 48B9-                   	mov rcx, AdMsg
+   103 000000A2 [0D00000000000000] 
+   104 000000AA BA0D000000              	mov rdx, ADLEN
+   105 000000AF E8B6FFFFFF              	call WriteChr
+   106                                  
+   107 000000B4 66B81701                	mov ax, 0117h
+   108 000000B8 E860FFFFFF              	call GotoXY
+   109                                  
+   110 000000BD 48B9-                   	mov rcx, Prompt
+   110 000000BF [1A00000000000000] 
+   111 000000C7 BA0D000000              	mov rdx, PROMPTLEN
+   112 000000CC E8B1FFFFFF              	call WriteString
+   113                                  
+   114 000000D1 B800000000              	mov rax, 0
+   115 000000D6 BF00000000              	mov rdi, 0
+   116 000000DB 4889CE                  	mov rsi, rcx
+   117 000000DE 0F05                    	syscall
+   118                                  
+   119 000000E0 B83C000000              	mov rax, 60
+   120 000000E5 BF00000000              	mov rdi, 0
+   121 000000EA 0F05                    	syscall

@@ -1,0 +1,18 @@
+     1                                  section .data
+     2 00000000 4B414E4741524F4F        	Kang db "KANGAROO"
+     3                                  
+     4                                  section .bss
+     5                                  section .text
+     6                                  global _start
+     7                                  
+     8                                  _start:
+     9 00000000 90                      	nop 			; Do nothing
+    10                                  
+    11 00000001 BB[00000000]            	mov ebx,Kang 		; Set rbx to Kang
+    12 00000006 B808000000              	mov eax,8 		; Set rax to 8
+    13 0000000B 67800320                Work:	add byte [ebx],32 	; Add 32 to the current value of the byte pointed at by rbx
+    14 0000000F FFC3                    	inc ebx 		; increment rbx to the next byte
+    15 00000011 FFC8                    	dec eax 		; decrement one from rax
+    16 00000013 75F6                    	jnz Work 		; If rax = 0 then move on
+    17                                  
+    18 00000015 90                      	nop 			; Do nothing - then segfault
